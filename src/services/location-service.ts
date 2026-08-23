@@ -1,13 +1,14 @@
+import "server-only";
 import {
   BadGatewayError,
   NotFoundError,
   ServiceUnavailableError,
 } from "@/lib/errors";
+
 import { OWM_Location, Location } from "@/types/location";
 
 const OWM_BASE_URL = "https://api.openweathermap.org";
 const OWM_API_KEY = process.env.OPEN_WEATHER_API_KEY;
-
 interface LocationSearchParams {
   query: {
     city: string;
