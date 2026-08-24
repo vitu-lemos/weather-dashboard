@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { NotFoundError } from "@/lib/errors";
+
 import { owmClient } from "./owm-client";
 import { findLocations } from "./location-finder";
 
@@ -86,11 +86,10 @@ describe("findLocations", () => {
     );
   });
 
-  it("throws NotFoundError when the list is empty", async () => {
+  it("returns empty list when no locations are found", async () => {
     vi.spyOn(owmClient, "request").mockResolvedValue({ list: [] });
 
-    await expect(findLocations({ city: "Nowhere" })).rejects.toBeInstanceOf(
-      NotFoundError,
-    );
+    const result = await findLocations({ city: "Nowhere" });
+    expect(result).toEqual([]);
   });
 });

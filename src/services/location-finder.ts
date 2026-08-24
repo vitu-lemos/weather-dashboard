@@ -1,6 +1,5 @@
 import "server-only";
 
-import { NotFoundError } from "@/lib/errors";
 import type { Location, OWM_LocationSearchResponse } from "@/types/location";
 import type { Units } from "@/types/weather";
 
@@ -27,10 +26,6 @@ export const findLocations = async ({
       units,
     },
   );
-
-  if (!data.list.length) {
-    throw new NotFoundError("No locations found");
-  }
 
   return data.list.map(
     ({ id, name, coord, main, dt, wind, sys, clouds, weather }) => ({
