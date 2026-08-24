@@ -1,7 +1,6 @@
-import { APP_UNITS } from "@/constants";
 import { CountryCode, LocationCoordination } from "./location";
 
-export type Units = keyof typeof APP_UNITS;
+export type Units = "imperial" | "metric";
 
 export interface WeatherCondition {
   id: number;

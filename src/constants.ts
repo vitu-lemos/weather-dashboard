@@ -1,4 +1,6 @@
-export const APP_UNITS = {
+import { Units } from "./types/weather";
+
+export const APP_UNITS: { [key: string]: { unit: Units; symbol: string } } = {
   metric: {
     unit: "metric",
     symbol: "°C",
