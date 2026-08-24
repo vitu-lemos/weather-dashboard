@@ -14,6 +14,12 @@ describe("sanitizeString", () => {
     expect(sanitizeString("New York, NY")).toBe("New York NY");
   });
 
+  it("keeps commas when preserveCommas is true", () => {
+    expect(sanitizeString("New York, NY", { preserveCommas: true })).toBe(
+      "New York, NY",
+    );
+  });
+
   it("removes control characters", () => {
     expect(sanitizeString("New\x00York\x1F\x7F")).toBe("NewYork");
   });
