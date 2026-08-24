@@ -4,6 +4,8 @@ export interface LocationCoordination {
   lat: number;
   lon: number;
 }
+/** Country code (ISO 3166-1 alpha-2 - US, JP, BR) */
+export type CountryCode = string;
 
 export interface WindCondition {
   speed: number;
@@ -19,7 +21,7 @@ export interface Location {
   wind: WindCondition;
 
   sys: {
-    country: string;
+    country: CountryCode;
   };
   clouds: {
     all: number;

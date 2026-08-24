@@ -53,6 +53,7 @@ export class OpenWeatherMapApiClient {
       const errorDetail = errorData?.message || "Invalid request";
       throw new BadGatewayError("Failed to fetch weather data", {
         detail: errorDetail,
+        statusCode: res.status,
       });
     }
 

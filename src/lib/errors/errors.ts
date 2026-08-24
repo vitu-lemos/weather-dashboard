@@ -211,6 +211,7 @@ export class BadGatewayError<
     context?: C,
   ) {
     super(message, 502, "BadGatewayError", context);
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
