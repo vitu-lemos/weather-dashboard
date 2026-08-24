@@ -1,24 +1,28 @@
-import { searchLocations } from "@/services/location-service";
+import { findLocations } from "@/services/location-finder";
 import { withErrorHandler } from "@/lib/errors";
 import { sanitizeString } from "@/helpers/sanitize-string";
 
 import { NextResponse, type NextRequest } from "next/server";
 import { BadRequestError } from "@/lib/errors/errors";
+import type { Units } from "@/types/weather";
+
+const isUnits = (value: string | null): value is Units =>
+  value === "imperial" || value === "metric";
 
 export const GET = withErrorHandler(async (req: NextRequest) => {
-  const rawCity = req.nextUrl.searchParams.get("city");
-  const rawState = req.nextUrl.searchParams.get("state");
-  const rawCountry = req.nextUrl.searchParams.get("country");
+  const rawSearch = req.nextUrl.searchParams.get("search");
+  const rawUnits = req.nextUrl.searchParams.get("units");
 
-  const city = rawCity ? sanitizeString(rawCity) : rawCity;
-  const state = rawState ? sanitizeString(rawState) : rawState;
-  const country = rawCountry ? sanitizeString(rawCountry) : rawCountry;
+  const city = rawSearch
+    ? sanitizeString(rawSearch, { preserveCommas: true })
+    : rawSearch;
+  const sanitizedUnits = sanitizeString(rawUnits ?? "");
+  const units: Units = isUnits(sanitizedUnits) ? sanitizedUnits : "metric";
 
   if (!city) {
     throw new BadRequestError("City is required");
   }
 
-  const locations = await searchLocations({ query: { city, country, state } });
-
+  const locations = await findLocations({ city, units });
   return NextResponse.json({ locations }, { status: 200 });
 });
