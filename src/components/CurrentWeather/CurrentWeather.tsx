@@ -9,18 +9,18 @@ interface CurrentWeatherProps {
 
 export function CurrentWeather({ current }: CurrentWeatherProps) {
   const [condition] = current.weather;
-
+  const location = `${current.name}, ${current.sys.country}`;
   return (
     <section
       className={styles.hero}
-      aria-label={`Current weather in ${current.name}`}
+      aria-label={`Current weather in ${location}`}
     >
       <WeatherIcon
         code={condition.id}
         className={styles.icon}
         variant={condition.icon.includes("n") ? "night" : "day"}
       />
-      <h2 className={styles.city}>{current.name}</h2>
+      <h2 className={styles.city}>{location}</h2>
       <p className={styles.temp}>{Math.round(current.main.temp)}°</p>
       <p className={styles.desc}>{condition.description}</p>
     </section>

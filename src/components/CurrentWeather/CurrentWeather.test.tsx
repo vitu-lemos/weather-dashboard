@@ -50,8 +50,10 @@ describe("CurrentWeather", () => {
       <CurrentWeather current={buildCurrentWeather()} />,
     );
 
-    expect(getByRole("region", { name: "Current weather in New York" })).toBeTruthy();
-    expect(getByText("New York")).toBeTruthy();
+    expect(
+      getByRole("region", { name: "Current weather in New York, US" }),
+    ).toBeTruthy();
+    expect(getByText("New York, US")).toBeTruthy();
     expect(getByText("22°")).toBeTruthy();
     expect(getByText("clear sky")).toBeTruthy();
 
