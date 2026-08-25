@@ -5,6 +5,7 @@ import { AppHeader } from "@/components/AppHeader/AppHeader";
 
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "../../public/css/weather-icons.min.css";
 
 const inter = Inter({
   subsets: ["latin"],
