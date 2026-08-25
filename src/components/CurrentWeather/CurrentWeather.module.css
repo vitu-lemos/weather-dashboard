@@ -1,0 +1,34 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.city {
+  font-size: 1.875rem;
+  font-weight: 400;
+}
+
+.temp {
+  font-size: 3.75rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.desc {
+  font-size: 0.875rem;
+  opacity: 0.85;
+  text-transform: capitalize;
+}
+
+.icon {
+  font-size: 6rem;
+}
+
+@media (min-width: 64rem) {
+  .temp {
+    font-size: 4.5rem;
+  }
+}
