@@ -1,0 +1,46 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.day {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.temps {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  align-items: baseline;
+}
+
+.low {
+  opacity: 0.85;
+}
+
+.high {
+  font-weight: 700;
+}
+
+@media (min-width: 640px) {
+  .card {
+    flex: 1;
+    flex-direction: column;
+    text-align: center;
+    padding: 16px 8px;
+  }
+
+  .day {
+    flex: 0;
+  }
+
+  .temps {
+    flex-direction: row;
+  }
+}
