@@ -36,7 +36,6 @@ export class OpenWeatherMapApiClient {
     const mergedParams = Object.assign(
       { units: DEFAULT_PARAMS.units, lang: DEFAULT_PARAMS.lang },
       params,
-      { appid: apiKey },
     );
 
     const qs = new URLSearchParams(mergedParams);
@@ -46,7 +45,11 @@ export class OpenWeatherMapApiClient {
       init.next = { revalidate: options.revalidateSeconds };
     }
 
-    const res = await fetch(`${baseUrl}${path}?${qs}`, init);
+    const dataURl = `${baseUrl}${path}?${qs.toString()}`;
+    const url = new URL(dataURl);
+    url.searchParams.append("appid", apiKey);
+
+    const res = await fetch(url, init);
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => null);
@@ -54,10 +57,20 @@ export class OpenWeatherMapApiClient {
       throw new BadGatewayError("Failed to fetch weather data", {
         detail: errorDetail,
         statusCode: res.status,
+        url: dataURl.toString(),
       });
     }
 
-    return res.json() as Promise<T>;
+    const data = await res.json().catch(() => null);
+    if (!data) {
+      throw new BadGatewayError("Failed to parse weather data", {
+        detail: "Response body is empty or invalid JSON",
+        statusCode: res.status,
+        url: dataURl.toString(),
+      });
+    }
+
+    return data as T;
   }
 }
 
