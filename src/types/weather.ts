@@ -56,3 +56,50 @@ export interface CurrentWeather {
   };
   weather: WeatherCondition[];
 }
+
+export interface DailyForecast {
+  dt: number;
+  label: string;
+  weather: WeatherCondition;
+  temp: {
+    day: number;
+    min: number;
+    max: number;
+    night: number;
+    eve: number;
+    morn: number;
+  };
+  feelsLike: {
+    day: number;
+    night: number;
+    eve: number;
+    morn: number;
+  };
+}
+
+export interface OwmDailyForecastEntry {
+  dt: number;
+  temp: {
+    day: number;
+    min: number;
+    max: number;
+    night: number;
+    eve: number;
+    morn: number;
+  };
+  feels_like: {
+    day: number;
+    night: number;
+    eve: number;
+    morn: number;
+  };
+  weather: WeatherCondition[];
+}
+
+export interface OwmForecastResponse {
+  lat: number;
+  lon: number;
+  timezone: string;
+  timezone_offset: number;
+  data: OwmDailyForecastEntry[];
+}
