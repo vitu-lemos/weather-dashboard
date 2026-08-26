@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { owmClient } from "./owm-client";
 import { findLocations } from "./location-finder";
@@ -37,6 +37,10 @@ const rawLocation = (id: number, name: string, country: string) => ({
 });
 
 describe("findLocations", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("maps the OWM find response to Location objects", async () => {
     const locations = rawLocation(3459943, "Jequié", "BR");
     vi.spyOn(owmClient, "request").mockResolvedValue({
