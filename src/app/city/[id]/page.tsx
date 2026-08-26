@@ -6,8 +6,12 @@ import { CustomError } from "@/lib/errors";
 import type {
   Units,
   CurrentWeather as CurrentWeatherData,
+  DailyForecast,
 } from "@/types/weather";
 import { getCurrentWeatherByLocationId } from "@/services/current-weather";
+import { getDailyForecast } from "@/services/forecast";
+import { LocationCoordination } from "@/types/location";
+import { ForecastList } from "@/components/ForecastList/ForecastList";
 
 type CityWeatherResult =
   | { success: true; data: { current: CurrentWeatherData } }
@@ -22,6 +26,28 @@ async function loadCityWeather(
       getCurrentWeatherByLocationId({ id: cityId, units }),
     ]);
     return { data: { current }, success: true };
+  } catch (error) {
+    const message =
+      error instanceof CustomError ? error.message : "Weather service error.";
+    const status = error instanceof CustomError ? error.statusCode : 500;
+    return { success: false, message, status };
+  }
+}
+
+type ForecastResult =
+  | { success: true; data: { forecast: DailyForecast[] } }
+  | { success: false; message: string; status: number };
+
+async function loadDailyForecast(
+  coord: LocationCoordination,
+  units: Units,
+): Promise<ForecastResult> {
+  try {
+    const forecast = await getDailyForecast({
+      coord,
+      units,
+    });
+    return { data: { forecast }, success: true };
   } catch (error) {
     const message =
       error instanceof CustomError ? error.message : "Weather service error.";
@@ -52,13 +78,27 @@ export default async function CityPage({
     return (
       <div>
         <h1>Failed to load city weather</h1>
+        <p>{result.message}</p>
       </div>
     );
   }
 
+  const forecastResult = await loadDailyForecast(
+    result.data.current.coord,
+    units,
+  );
+
+  console.log("forecastResult", forecastResult);
+
   return (
     <>
       <CurrentWeather current={result.data.current} />
+      {forecastResult.success && (
+        <ForecastList
+          forecast={forecastResult.data.forecast}
+          title="5-Day Forecast"
+        />
+      )}
     </>
   );
 }
