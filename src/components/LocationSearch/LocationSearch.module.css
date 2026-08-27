@@ -1,0 +1,24 @@
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #212121;
+}
+
+.optionIcon {
+  font-size: 18px;
+}
+
+.optionName {
+  flex: 1;
+}
+
+.optionFlag {
+  font-size: 16px;
+}
+
+.optionTemp {
+  font-weight: 500;
+}
