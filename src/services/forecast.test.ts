@@ -15,12 +15,14 @@ function entry(
   },
   feelsLike: { day: number; night: number; eve: number; morn: number },
   icon: string,
+  pop = 0.4,
 ): OwmDailyForecastEntry {
   return {
     dt: Math.floor(new Date(isoDateUTC).getTime() / 1000),
     temp,
     feels_like: feelsLike,
     weather: [{ icon, description: "clear sky", main: "Clear", id: 800 }],
+    pop,
   };
 }
 
@@ -50,6 +52,7 @@ describe("mapToDaily", () => {
           main: "Clear",
           id: 800,
         },
+        pop: 0.4,
         temp: { day: 63, min: 60, max: 66, night: 58, eve: 64, morn: 60 },
         feelsLike: { day: 63, night: 58, eve: 64, morn: 59 },
       },

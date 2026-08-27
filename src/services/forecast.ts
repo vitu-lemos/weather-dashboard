@@ -29,6 +29,7 @@ export function mapToDaily(
             timeZone: "UTC",
           }),
     weather: entry.weather[0],
+    pop: entry.pop,
     temp: {
       day: Math.round(entry.temp.day),
       min: Math.round(entry.temp.min),

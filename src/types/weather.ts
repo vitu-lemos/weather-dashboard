@@ -61,6 +61,8 @@ export interface DailyForecast {
   dt: number;
   label: string;
   weather: WeatherCondition;
+  /** Probability of precipitation, 0-1 */
+  pop: number;
   temp: {
     day: number;
     min: number;
@@ -79,6 +81,8 @@ export interface DailyForecast {
 
 export interface OwmDailyForecastEntry {
   dt: number;
+  /** Probability of precipitation, 0-1 */
+  pop: number;
   temp: {
     day: number;
     min: number;
