@@ -1,0 +1,24 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.main {
+  flex: 1;
+}
+
+.sidebar {
+  flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .sidebar {
+    flex: 0 0 320px;
+  }
+}

@@ -16,6 +16,7 @@ function day(
     dt: 1787616000,
     label,
     weather: { id: 800, main: "Clear", description: "clear sky", icon },
+    pop: 0.3,
     temp: { ...TEMP, min, max },
     feelsLike: FEELS_LIKE,
   };

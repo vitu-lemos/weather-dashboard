@@ -12,6 +12,7 @@ import { getCurrentWeatherByLocationId } from "@/services/current-weather";
 import { getDailyForecast } from "@/services/forecast";
 import { LocationCoordination } from "@/types/location";
 import { ForecastList } from "@/components/ForecastList/ForecastList";
+import styles from "./page.module.css";
 
 type CityWeatherResult =
   | { success: true; data: { current: CurrentWeatherData } }
@@ -87,18 +88,26 @@ export default async function CityPage({
     result.data.current.coord,
     units,
   );
-
-  console.log("forecastResult", forecastResult);
-
+  const todayPrecipitationChance = forecastResult.success
+    ? (forecastResult.data.forecast[0]?.pop ?? 0)
+    : 0;
   return (
-    <>
-      <CurrentWeather current={result.data.current} units={units} />
-      {forecastResult.success && (
-        <ForecastList
-          forecast={forecastResult.data.forecast}
-          title="5-Day Forecast"
+    <div className={styles.layout}>
+      <div className={styles.main}>
+        <CurrentWeather
+          current={result.data.current}
+          units={units}
+          precipitationChance={todayPrecipitationChance}
         />
+      </div>
+      {forecastResult.success && (
+        <div className={styles.sidebar}>
+          <ForecastList
+            forecast={forecastResult.data.forecast}
+            title="5-Day Forecast"
+          />
+        </div>
       )}
-    </>
+    </div>
   );
 }

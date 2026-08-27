@@ -2,9 +2,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
-  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px 12px;
 }
 
 .day {
@@ -13,11 +13,22 @@
   font-weight: 500;
 }
 
+.rain {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
 .temps {
   display: flex;
+  flex-shrink: 0;
   gap: 10px;
   font-size: 13px;
   align-items: baseline;
+  white-space: nowrap;
 }
 
 .low {
@@ -26,21 +37,4 @@
 
 .high {
   font-weight: 700;
-}
-
-@media (min-width: 640px) {
-  .card {
-    flex: 1;
-    flex-direction: column;
-    text-align: center;
-    padding: 16px 8px;
-  }
-
-  .day {
-    flex: 0;
-  }
-
-  .temps {
-    flex-direction: row;
-  }
 }
