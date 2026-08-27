@@ -1,4 +1,4 @@
-import { WeatherIcon } from "@/components/WeatherIcon/WeatherIcon";
+import { WeatherIcon } from "@/components/ui/WeatherIcon/WeatherIcon";
 import styles from "./ForecastCard.module.css";
 import type { DailyForecast } from "@/types/weather";
 

@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { WeatherIcon } from "@/components/WeatherIcon/WeatherIcon";
+import { WeatherIcon } from "@/components/ui/WeatherIcon/WeatherIcon";
 import { SearchBar } from "@/components/ui/SearchBar/SearchBar";
 import type { Location } from "@/types/location";
 import type { Units } from "@/types/weather";
