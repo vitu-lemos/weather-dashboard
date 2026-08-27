@@ -11,11 +11,12 @@ import type {
 } from "@/types/weather";
 
 import styles from "./CurrentWeather.module.css";
-import { Droplets, Gauge, Wind } from "lucide-react";
+import { CloudRain, Droplets, Gauge, Wind } from "lucide-react";
 
 interface CurrentWeatherProps {
   current: CurrentWeatherData;
   units?: Units;
+  precipitationChance?: number;
 }
 
 const WIND_SPEED_UNIT: Record<Units, string> = {
@@ -26,6 +27,7 @@ const WIND_SPEED_UNIT: Record<Units, string> = {
 export function CurrentWeather({
   current,
   units = "imperial",
+  precipitationChance = 0,
 }: CurrentWeatherProps) {
   const [condition] = current.weather;
   const location = `${current.name}, ${current.sys.country}`;
@@ -75,6 +77,11 @@ export function CurrentWeather({
             </p>
           </div>
           <dl className={styles.metrics}>
+            <div className={styles.metric}>
+              <CloudRain size={16} />
+              <dt>Rain Chance: </dt>
+              <dd>{Math.round(precipitationChance * 100)}%</dd>
+            </div>
             <div className={styles.metric}>
               <Droplets />
               <dt>Humidity: </dt>
