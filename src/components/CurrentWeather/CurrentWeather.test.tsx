@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { render } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, render } from "@testing-library/react";
 import { CurrentWeather } from "./CurrentWeather";
 import type { CurrentWeather as CurrentWeatherData } from "@/types/weather";
 
@@ -45,6 +45,10 @@ function buildCurrentWeather(
 }
 
 describe("CurrentWeather", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it("renders the current weather with correct fields", () => {
     const { container, getByText, getByRole } = render(
       <CurrentWeather current={buildCurrentWeather()} />,
@@ -100,5 +104,41 @@ describe("CurrentWeather", () => {
 
     const icon = container.querySelector("i");
     expect(icon?.className).toContain("wi-owm-night-800");
+  });
+
+  it("renders the date derived from dt in UTC", () => {
+    const { getByText } = render(
+      <CurrentWeather current={buildCurrentWeather({ dt: 1_700_000_000 })} />,
+    );
+
+    expect(getByText("Tuesday, Nov 14")).toBeTruthy();
+  });
+
+  it("renders humidity, wind speed, and pressure metrics", () => {
+    const { getByText } = render(
+      <CurrentWeather
+        current={buildCurrentWeather({
+          wind: { speed: 3.5, deg: 180, gust: 5 },
+        })}
+        units="imperial"
+      />,
+    );
+
+    expect(getByText("60%")).toBeTruthy();
+    expect(getByText("4 mph")).toBeTruthy();
+    expect(getByText("1015 hPa")).toBeTruthy();
+  });
+
+  it("renders wind speed in m/s for metric units", () => {
+    const { getByText } = render(
+      <CurrentWeather
+        current={buildCurrentWeather({
+          wind: { speed: 3.5, deg: 180, gust: 5 },
+        })}
+        units="metric"
+      />,
+    );
+
+    expect(getByText("4 m/s")).toBeTruthy();
   });
 });

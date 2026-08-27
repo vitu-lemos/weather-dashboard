@@ -1,3 +1,4 @@
+import { joinClassNames } from "@/helpers/classnames";
 import styles from "./WeatherIcon.module.css";
 
 /* References:
@@ -28,7 +29,7 @@ export const WeatherIcon = ({
 
   return (
     <i
-      className={`wi  ${iconClass} ${styles.icon} ${className || ""}`}
+      className={joinClassNames("wi", iconClass, styles.icon, className)}
       {...props}
     ></i>
   );

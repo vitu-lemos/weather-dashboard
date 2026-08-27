@@ -92,7 +92,7 @@ export default async function CityPage({
 
   return (
     <>
-      <CurrentWeather current={result.data.current} />
+      <CurrentWeather current={result.data.current} units={units} />
       {forecastResult.success && (
         <ForecastList
           forecast={forecastResult.data.forecast}

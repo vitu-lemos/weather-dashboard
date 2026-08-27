@@ -1,28 +1,100 @@
 import { WeatherIcon } from "@/components/WeatherIcon/WeatherIcon";
-import type { CurrentWeather as CurrentWeatherData } from "@/types/weather";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/Card/Card";
+import type {
+  CurrentWeather as CurrentWeatherData,
+  Units,
+} from "@/types/weather";
 
 import styles from "./CurrentWeather.module.css";
+import { Droplets, Gauge, Wind } from "lucide-react";
 
 interface CurrentWeatherProps {
   current: CurrentWeatherData;
+  units?: Units;
 }
 
-export function CurrentWeather({ current }: CurrentWeatherProps) {
+const WIND_SPEED_UNIT: Record<Units, string> = {
+  metric: "m/s",
+  imperial: "mph",
+};
+
+export function CurrentWeather({
+  current,
+  units = "imperial",
+}: CurrentWeatherProps) {
   const [condition] = current.weather;
   const location = `${current.name}, ${current.sys.country}`;
+
+  const timestamp = (current.dt + current.timezone) * 1000;
+
+  const date = new Date(timestamp).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+
+  const time = new Date(timestamp).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    timeZone: "UTC",
+  });
+
   return (
-    <section
-      className={styles.hero}
-      aria-label={`Current weather in ${location}`}
-    >
-      <WeatherIcon
-        code={condition.id}
-        className={styles.icon}
-        variant={condition.icon.includes("n") ? "night" : "day"}
-      />
-      <h2 className={styles.city}>{location}</h2>
-      <p className={styles.temp}>{Math.round(current.main.temp)}°</p>
-      <p className={styles.desc}>{condition.description}</p>
-    </section>
+    <Card>
+      <CardHeader className={styles.header}>
+        <div>
+          <CardTitle>{location}</CardTitle>
+          <p className={styles.header__date}>{date}</p>
+          <p className={styles.header__date}>{time}</p>
+        </div>
+        <WeatherIcon
+          code={condition.id}
+          className={styles.header__icon}
+          variant={condition.icon.includes("n") ? "night" : "day"}
+        />
+      </CardHeader>
+      <CardContent>
+        <section
+          className={styles.main}
+          aria-label={`Current weather in ${location}`}
+        >
+          <div className={styles.main__temp}>
+            <p className={styles.temp__value}>
+              {Math.round(current.main.temp)}°
+            </p>
+            <p className={styles.temp__desc}>{condition.description}</p>
+            <p className={styles.temp__feels_like}>
+              Feels like {Math.round(current.main.feels_like)}°
+              {units === "metric" ? "C" : "F"}
+            </p>
+          </div>
+          <dl className={styles.metrics}>
+            <div className={styles.metric}>
+              <Droplets />
+              <dt>Humidity: </dt>
+              <dd>{current.main.humidity}%</dd>
+            </div>
+            <div className={styles.metric}>
+              <Wind />
+              <dt>Wind Speed: </dt>
+              <dd>
+                {Math.round(current.wind.speed)} {WIND_SPEED_UNIT[units]}
+              </dd>
+            </div>
+            <div className={styles.metric}>
+              <Gauge />
+              <dt>Pressure: </dt>
+              <dd>{current.main.pressure} hPa</dd>
+            </div>
+          </dl>
+        </section>
+      </CardContent>
+    </Card>
   );
 }
