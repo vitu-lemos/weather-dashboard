@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { AppShell } from "@/components/AppShell/AppShell";
 import { AppHeader } from "@/components/AppHeader/AppHeader";
+import { AppHeaderSkeleton } from "@/components/AppHeader/AppHeaderSkeleton";
 import { Disclaimer } from "@/components/Disclaimer/Disclaimer";
 
 import { Inter } from "next/font/google";
@@ -23,7 +25,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${inter.className}`}>
       <body>
         <AppShell>
-          <AppHeader />
+          <Suspense fallback={<AppHeaderSkeleton />}>
+            <AppHeader />
+          </Suspense>
           <main>{children}</main>
           <footer>
             <Disclaimer />
