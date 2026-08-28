@@ -25,6 +25,7 @@ export const findLocations = async ({
       cnt: limit.toString(),
       units,
     },
+    { revalidateSeconds: 300 },
   );
 
   return data.list.map(
