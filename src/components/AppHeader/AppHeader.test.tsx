@@ -14,23 +14,11 @@ vi.mock("next/navigation", () => ({
 
 function mockLocation(overrides: Partial<Location> = {}): Location {
   return {
-    id: 42,
     name: "New York",
-    coord: { lat: 40.7128, lon: -74.006 },
-    main: {
-      temp: 22,
-      feels_like: 22,
-      temp_min: 20,
-      temp_max: 24,
-      pressure: 1013,
-      humidity: 50,
-      sea_level: 1013,
-      grnd_level: 1010,
-    },
-    dt: 0,
-    wind: { speed: 1, deg: 1 },
-    sys: { country: "US" },
-    clouds: { all: 0 },
+    lat: 40.7128,
+    lon: -74.006,
+    country: "US",
+    main: { temp: 22 },
     weather: [{ id: 800, main: "Clear", description: "clear sky", icon: "01d" }],
     ...overrides,
   };
@@ -75,9 +63,9 @@ describe("AppHeader", () => {
     expect(calledUrl).toContain("units=metric");
   });
 
-  it("navigates to the city page with the current units when a result is picked", async () => {
+  it("navigates home with the coords and current units when a result is picked", async () => {
     searchParams = new URLSearchParams("units=metric");
-    vi.stubGlobal("fetch", mockLocationsFetch([mockLocation({ id: 42 })]));
+    vi.stubGlobal("fetch", mockLocationsFetch([mockLocation()]));
 
     render(<AppHeader />);
     fireEvent.change(getSearchInput(), { target: { value: "New York" } });
@@ -87,6 +75,8 @@ describe("AppHeader", () => {
     });
     fireEvent.click(option);
 
-    expect(pushMock).toHaveBeenCalledWith("/city/42?units=metric");
+    expect(pushMock).toHaveBeenCalledWith(
+      "/?lat=40.7128&lon=-74.006&units=metric",
+    );
   });
 });

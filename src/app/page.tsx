@@ -2,7 +2,12 @@ import { WeatherDashboard } from "@/components/WeatherDashboard/WeatherDashboard
 import { DEFAULT_APP_UNIT } from "@/constants";
 import type { Units } from "@/types/weather";
 
-const DEFAULT_CITY_ID = 5128581; // New York
+const DEFAULT_COORD = { lat: 40.7127281, lon: -74.0060152 }; // New York
+
+function parseCoord(value: string | string[] | undefined): number | null {
+  const parsed = Number(Array.isArray(value) ? value[0] : value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
 
 export default async function Home({ searchParams }: PageProps<"/">) {
   const query = await searchParams;
@@ -11,5 +16,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       ? query.units
       : DEFAULT_APP_UNIT.unit;
 
-  return <WeatherDashboard locationId={DEFAULT_CITY_ID} units={units} />;
+  const lat = parseCoord(query.lat) ?? DEFAULT_COORD.lat;
+  const lon = parseCoord(query.lon) ?? DEFAULT_COORD.lon;
+
+  return <WeatherDashboard coord={{ lat, lon }} units={units} />;
 }

@@ -25,7 +25,12 @@ export function AppHeader() {
 
   const onChangeLocation = useCallback(
     (location: Location) => {
-      router.push(`/city/${location.id}?units=${units}`);
+      const params = new URLSearchParams({
+        lat: location.lat.toString(),
+        lon: location.lon.toString(),
+        units,
+      });
+      router.push(`/?${params.toString()}`);
     },
     [router, units],
   );

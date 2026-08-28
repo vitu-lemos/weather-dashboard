@@ -3,7 +3,7 @@ import { CurrentWeather } from "@/components/CurrentWeather/CurrentWeather";
 import { ForecastList } from "@/components/ForecastList/ForecastList";
 import { HourlyForecastList } from "@/components/HourlyForecastList/HourlyForecastList";
 import { CustomError } from "@/lib/errors";
-import { getCurrentWeatherByLocationId } from "@/services/current-weather";
+import { getCurrentWeatherByCoord } from "@/services/current-weather";
 import { getDailyForecast, getHourlyForecast } from "@/services/forecast";
 import type {
   Units,
@@ -16,7 +16,7 @@ import type { LocationCoordination } from "@/types/location";
 import styles from "./WeatherDashboard.module.css";
 
 interface WeatherDashboardProps {
-  locationId: number;
+  coord: LocationCoordination;
   units: Units;
 }
 
@@ -27,12 +27,12 @@ type ResponseResult<T> =
 type CityWeatherResult = ResponseResult<{ current: CurrentWeatherData }>;
 
 async function loadCityWeather(
-  locationId: number,
+  coord: LocationCoordination,
   units: Units,
 ): Promise<CityWeatherResult> {
   try {
-    const current = await getCurrentWeatherByLocationId({
-      id: locationId,
+    const current = await getCurrentWeatherByCoord({
+      ...coord,
       units,
     });
     return { data: { current }, success: true };
@@ -137,10 +137,10 @@ async function loadHourlyForecast(
 }
 
 export async function WeatherDashboard({
-  locationId,
+  coord,
   units,
 }: WeatherDashboardProps) {
-  const result = await loadCityWeather(locationId, units);
+  const result = await loadCityWeather(coord, units);
   if (result.success === false && result.status === 404) {
     notFound();
   }

@@ -8,7 +8,9 @@ import type {
 } from "@/types/weather";
 
 const notFoundMock = vi.fn();
-const getCurrentWeatherByLocationIdMock = vi.fn();
+const NY_COORD = { lat: 40.7143, lon: -74.006 };
+
+const getCurrentWeatherByCoordMock = vi.fn();
 const getDailyForecastMock = vi.fn();
 const getHourlyForecastMock = vi.fn();
 
@@ -17,8 +19,8 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("@/services/current-weather", () => ({
-  getCurrentWeatherByLocationId: (...args: unknown[]) =>
-    getCurrentWeatherByLocationIdMock(...args),
+  getCurrentWeatherByCoord: (...args: unknown[]) =>
+    getCurrentWeatherByCoordMock(...args),
 }));
 
 vi.mock("@/services/forecast", () => ({
@@ -90,10 +92,10 @@ describe("WeatherDashboard", () => {
   });
 
   it("renders the current weather and forecast on success", async () => {
-    getCurrentWeatherByLocationIdMock.mockResolvedValue(buildCurrentWeather());
+    getCurrentWeatherByCoordMock.mockResolvedValue(buildCurrentWeather());
     getDailyForecastMock.mockResolvedValue(buildForecast());
 
-    render(await WeatherDashboard({ locationId: 5128581, units: "metric" }));
+    render(await WeatherDashboard({ coord: NY_COORD, units: "metric" }));
 
     expect(screen.getByText("New York, US")).toBeTruthy();
     expect(screen.getByText("5-Day Forecast")).toBeTruthy();
@@ -101,43 +103,43 @@ describe("WeatherDashboard", () => {
   });
 
   it("calls notFound when the location does not exist", async () => {
-    getCurrentWeatherByLocationIdMock.mockRejectedValue(
+    getCurrentWeatherByCoordMock.mockRejectedValue(
       new NotFoundError("Location not found"),
     );
     getDailyForecastMock.mockResolvedValue(buildForecast());
 
-    render(await WeatherDashboard({ locationId: 9999999, units: "metric" }));
+    render(await WeatherDashboard({ coord: NY_COORD, units: "metric" }));
 
     expect(notFoundMock).toHaveBeenCalled();
   });
 
   it("renders an error message when the current weather fetch fails", async () => {
-    getCurrentWeatherByLocationIdMock.mockRejectedValue(
+    getCurrentWeatherByCoordMock.mockRejectedValue(
       new BadGatewayError("Weather service error."),
     );
     getDailyForecastMock.mockResolvedValue(buildForecast());
 
-    render(await WeatherDashboard({ locationId: 5128581, units: "metric" }));
+    render(await WeatherDashboard({ coord: NY_COORD, units: "metric" }));
 
     expect(screen.getByText("Failed to load city weather")).toBeTruthy();
   });
 
   it("renders the current weather without a forecast sidebar when the forecast fetch fails", async () => {
-    getCurrentWeatherByLocationIdMock.mockResolvedValue(buildCurrentWeather());
+    getCurrentWeatherByCoordMock.mockResolvedValue(buildCurrentWeather());
     getDailyForecastMock.mockRejectedValue(new Error("boom"));
 
-    render(await WeatherDashboard({ locationId: 5128581, units: "metric" }));
+    render(await WeatherDashboard({ coord: NY_COORD, units: "metric" }));
 
     expect(screen.getByText("New York, US")).toBeTruthy();
     expect(screen.queryByText("5-Day Forecast")).toBeNull();
   });
 
   it("renders the current weather without an hourly section when the hourly fetch fails", async () => {
-    getCurrentWeatherByLocationIdMock.mockResolvedValue(buildCurrentWeather());
+    getCurrentWeatherByCoordMock.mockResolvedValue(buildCurrentWeather());
     getDailyForecastMock.mockResolvedValue(buildForecast());
     getHourlyForecastMock.mockRejectedValue(new Error("boom"));
 
-    render(await WeatherDashboard({ locationId: 5128581, units: "metric" }));
+    render(await WeatherDashboard({ coord: NY_COORD, units: "metric" }));
 
     expect(screen.getByText("New York, US")).toBeTruthy();
     expect(screen.queryByText("Hourly Forecast")).toBeNull();
