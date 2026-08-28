@@ -55,26 +55,28 @@ export function CurrentWeather({
           <p className={styles.header__date}>{date}</p>
           <p className={styles.header__date}>{time}</p>
         </div>
-        <WeatherIcon
-          code={condition.id}
-          className={styles.header__icon}
-          variant={condition.icon.includes("n") ? "night" : "day"}
-        />
       </CardHeader>
       <CardContent>
         <section
           className={styles.main}
           aria-label={`Current weather in ${location}`}
         >
-          <div className={styles.main__temp}>
-            <p className={styles.temp__value}>
-              {Math.round(current.main.temp)}°
-            </p>
-            <p className={styles.temp__desc}>{condition.description}</p>
-            <p className={styles.temp__feels_like}>
-              Feels like {Math.round(current.main.feels_like)}°
-              {units === "metric" ? "C" : "F"}
-            </p>
+          <div className={styles.main__content}>
+            <div className={styles.main__temp}>
+              <p className={styles.temp__value}>
+                {Math.round(current.main.temp)}°
+              </p>
+              <p className={styles.temp__desc}>{condition.description}</p>
+              <p className={styles.temp__feels_like}>
+                Feels like {Math.round(current.main.feels_like)}°
+                {units === "metric" ? "C" : "F"}
+              </p>
+            </div>
+            <WeatherIcon
+              code={condition.id}
+              className={styles.icon}
+              variant={condition.icon.includes("n") ? "night" : "day"}
+            />
           </div>
           <dl className={styles.metrics}>
             <div className={styles.metric}>
