@@ -73,6 +73,35 @@ describe("LocationSearch", () => {
     expect(screen.getByText("22°")).toBeDefined();
   });
 
+  it("aborts the previous in-flight request when a new search starts", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockImplementationOnce(() => new Promise(() => {}))
+      .mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ locations: [mockLocation()] }),
+        }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<LocationSearch onSelect={vi.fn()} unit="metric" />);
+    fireEvent.change(getSearchInput(), { target: { value: "Lon" } });
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1), {
+      timeout: 1000,
+    });
+    const firstSignal = fetchMock.mock.calls[0][1].signal as AbortSignal;
+    expect(firstSignal.aborted).toBe(false);
+
+    fireEvent.change(getSearchInput(), { target: { value: "London" } });
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2), {
+      timeout: 1000,
+    });
+    expect(firstSignal.aborted).toBe(true);
+  });
+
   it("calls onSelect with the picked location when an option is clicked", async () => {
     const location = mockLocation();
     const onSelect = vi.fn();

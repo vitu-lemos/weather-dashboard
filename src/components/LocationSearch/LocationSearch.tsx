@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { WeatherIcon } from "@/components/ui/WeatherIcon/WeatherIcon";
 import { SearchBar } from "@/components/ui/SearchBar/SearchBar";
@@ -27,15 +27,28 @@ export function LocationSearch({
   ariaLabel = "Search city",
 }: LocationSearchProps) {
   const [value, setValue] = useState<Location | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const handleSearch = useCallback(
     async (term: string): Promise<Location[]> => {
-      const res = await fetch(
-        `/api/locations?search=${encodeURIComponent(term)}&units=${unit}`,
-      );
-      if (!res.ok) return [];
-      const data: { locations: Location[] } = await res.json();
-      return data.locations ?? [];
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      try {
+        const res = await fetch(
+          `/api/locations?search=${encodeURIComponent(term)}&units=${unit}`,
+          { signal: controller.signal },
+        );
+        if (!res.ok) return [];
+        const data: { locations: Location[] } = await res.json();
+        return data.locations ?? [];
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return [];
+        }
+        throw error;
+      }
     },
     [unit],
   );
