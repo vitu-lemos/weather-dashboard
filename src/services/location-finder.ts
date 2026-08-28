@@ -1,9 +1,10 @@
 import "server-only";
 
-import type { Location, OWM_LocationSearchResponse } from "@/types/location";
+import type { Location, OwmGeocodingResponse } from "@/types/location";
 import type { Units } from "@/types/weather";
 
 import { owmClient } from "./owm-client";
+import { getCurrentWeatherByCoord } from "./current-weather";
 
 interface FindLocationsParams {
   city: string;
@@ -16,29 +17,26 @@ export const findLocations = async ({
   units = "metric",
   limit = 5,
 }: FindLocationsParams): Promise<Location[]> => {
-  const data = await owmClient.request<OWM_LocationSearchResponse>(
-    "/data/2.5/find",
-    {
-      q: city,
-      type: "like",
-      sort: "population",
-      cnt: limit.toString(),
-      units,
-    },
-    { revalidateSeconds: 300 },
+  const geoLocations = await owmClient.request<OwmGeocodingResponse>(
+    "/geo/1.0/direct",
+    { q: city, limit: limit.toString() },
+    { revalidateSeconds: 500 },
   );
 
-  return data.list.map(
-    ({ id, name, coord, main, dt, wind, sys, clouds, weather }) => ({
-      id,
-      name,
-      coord,
-      main,
-      dt,
-      wind,
-      sys,
-      clouds,
-      weather,
+  return Promise.all(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    geoLocations.map(async ({ local_names, ...geoLocation }) => {
+      const weather = await getCurrentWeatherByCoord({
+        lat: geoLocation.lat,
+        lon: geoLocation.lon,
+        units,
+      });
+
+      return {
+        ...geoLocation,
+        main: { temp: weather.main.temp },
+        weather: weather.weather,
+      };
     }),
   );
 };

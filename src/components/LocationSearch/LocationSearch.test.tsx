@@ -11,23 +11,11 @@ import type { Location } from "@/types/location";
 
 function mockLocation(overrides: Partial<Location> = {}): Location {
   return {
-    id: 1,
     name: "New York",
-    coord: { lat: 40.7128, lon: -74.006 },
-    main: {
-      temp: 22,
-      feels_like: 22,
-      temp_min: 20,
-      temp_max: 24,
-      pressure: 1013,
-      humidity: 50,
-      sea_level: 1013,
-      grnd_level: 1010,
-    },
-    dt: 0,
-    wind: { speed: 1, deg: 1 },
-    sys: { country: "US" },
-    clouds: { all: 0 },
+    lat: 40.7128,
+    lon: -74.006,
+    country: "US",
+    main: { temp: 22 },
     weather: [
       { id: 800, main: "Clear", description: "clear sky", icon: "01d" },
     ],
@@ -86,7 +74,7 @@ describe("LocationSearch", () => {
   });
 
   it("calls onSelect with the picked location when an option is clicked", async () => {
-    const location = mockLocation({ id: 42 });
+    const location = mockLocation();
     const onSelect = vi.fn();
     vi.stubGlobal("fetch", mockLocationsFetch([location]));
 

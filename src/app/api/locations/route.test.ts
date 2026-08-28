@@ -13,29 +13,12 @@ function makeRequest(url: string) {
   return new NextRequest(new Request(url));
 }
 
-const resolvedLocation = (id: number, name: string, country: string) => ({
-  id,
+const resolvedLocation = (name: string, country: string) => ({
   name,
-  coord: { lat: 0, lon: 0 },
-  sys: { country },
-  main: {
-    temp: 22.89,
-    feels_like: 22.64,
-    temp_min: 22.79,
-    temp_max: 23.52,
-    pressure: 1021,
-    humidity: 54,
-    sea_level: 1021,
-    grnd_level: 947,
-  },
-  dt: 1787577770,
-  wind: {
-    speed: 4.3,
-    deg: 113,
-  },
-  clouds: {
-    all: 10,
-  },
+  lat: 0,
+  lon: 0,
+  country,
+  main: { temp: 22.89 },
   weather: [
     {
       id: 800,
@@ -54,7 +37,7 @@ describe("GET /api/locations", () => {
   });
 
   it("returns the mapped locations for a valid search", async () => {
-    const location = resolvedLocation(3459943, "New York", "US");
+    const location = resolvedLocation("New York", "US");
     vi.mocked(findLocations).mockResolvedValue([location]);
 
     const res = await GET(
@@ -71,7 +54,7 @@ describe("GET /api/locations", () => {
   });
 
   it("sanitizes the city param before calling findLocations", async () => {
-    const location = resolvedLocation(3459943, "New York", "US");
+    const location = resolvedLocation("New York", "US");
 
     vi.mocked(findLocations).mockResolvedValue([location]);
 
@@ -89,7 +72,7 @@ describe("GET /api/locations", () => {
   });
 
   it("passes a valid units param through", async () => {
-    const location = resolvedLocation(3459943, "New York", "US");
+    const location = resolvedLocation("New York", "US");
 
     vi.mocked(findLocations).mockResolvedValue([location]);
 

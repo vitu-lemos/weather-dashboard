@@ -17,7 +17,7 @@ interface LocationSearchProps {
 }
 
 function getOptionLabel(location: Location): string {
-  return `${location.name}, ${location.sys.country}`;
+  return `${location.name}, ${location.country}`;
 }
 
 export function LocationSearch({
@@ -53,7 +53,7 @@ export function LocationSearch({
     return (
       <div className={styles.option}>
         <ReactCountryFlag
-          countryCode={location.sys.country}
+          countryCode={location.country}
           svg
           className={styles.optionFlag}
           role="presentation"
@@ -82,7 +82,7 @@ export function LocationSearch({
       onSearch={handleSearch}
       onSelect={handleSelect}
       renderOptionLabel={renderOption}
-      getOptionValue={(location) => String(location.id)}
+      getOptionValue={(location) => `${location.lat},${location.lon}`}
       getOptionLabel={getOptionLabel}
       placeholder={placeholder}
       aria-label={ariaLabel}

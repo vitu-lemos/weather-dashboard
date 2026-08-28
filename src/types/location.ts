@@ -1,4 +1,4 @@
-import { WeatherCondition, WeatherMainMetrics } from "./weather";
+import { WeatherCondition } from "./weather";
 
 export interface LocationCoordination {
   lat: number;
@@ -7,31 +7,19 @@ export interface LocationCoordination {
 /** Country code (ISO 3166-1 alpha-2 - US, JP, BR) */
 export type CountryCode = string;
 
-export interface WindCondition {
-  speed: number;
-  deg: number;
-}
-export interface Location {
-  id: number;
+export interface GeoLocation {
   name: string;
-  coord: LocationCoordination;
-  main: WeatherMainMetrics;
-  /* Time of data calculation, unix, UTC */
-  dt: number;
-  wind: WindCondition;
+  lat: number;
+  lon: number;
+  country: CountryCode;
+  state?: string;
+}
 
-  sys: {
-    country: CountryCode;
-  };
-  clouds: {
-    all: number;
-  };
+export interface Location extends GeoLocation {
+  main: { temp: number };
   weather: WeatherCondition[];
 }
 
-export interface OWM_LocationSearchResponse {
-  message: string;
-  cod: string;
-  count: number;
-  list: (Location & { rain: unknown | null; snow: unknown | null })[];
-}
+export type OwmGeocodingResponse = Array<
+  GeoLocation & { local_names?: Record<string, string> }
+>;
