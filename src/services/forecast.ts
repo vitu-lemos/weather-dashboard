@@ -28,6 +28,7 @@ interface GetHourlyForecastParams {
 
 export function mapToDaily(
   entries: OwmDailyForecastEntry[],
+  timezoneOffsetSec: number,
   limit = 5,
 ): DailyForecast[] {
   return entries.slice(0, limit).map((entry, index) => ({
@@ -35,10 +36,10 @@ export function mapToDaily(
     label:
       index === 0
         ? "Today"
-        : new Date(entry.dt * 1000).toLocaleDateString("en-US", {
-            weekday: "long",
-            timeZone: "UTC",
-          }),
+        : new Date((entry.dt + timezoneOffsetSec) * 1000).toLocaleDateString(
+            "en-US",
+            { weekday: "long", timeZone: "UTC" },
+          ),
     weather: entry.weather[0],
     pop: entry.pop,
     temp: {
@@ -74,7 +75,7 @@ export const getDailyForecast = async ({
     { revalidateSeconds: 300 },
   );
 
-  return mapToDaily(data.data, limit);
+  return mapToDaily(data.data, data.timezone_offset, limit);
 };
 
 export function mapToHourly(

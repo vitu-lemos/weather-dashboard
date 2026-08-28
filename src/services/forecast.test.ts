@@ -48,7 +48,7 @@ describe("mapToDaily", () => {
   it("maps oWM response to DailyForecast format", () => {
     const entries = [entry("2026-08-20", TEMP, FEELS_LIKE, "01d")];
 
-    const result = mapToDaily(entries);
+    const result = mapToDaily(entries, 0);
 
     expect(result).toEqual([
       {
@@ -73,7 +73,7 @@ describe("mapToDaily", () => {
       entry("2026-08-21", TEMP, FEELS_LIKE, "10d"),
     ];
 
-    const result = mapToDaily(entries);
+    const result = mapToDaily(entries, 0);
 
     expect(result[1].label).toBe("Friday");
   });
@@ -87,7 +87,7 @@ describe("mapToDaily", () => {
       ],
     };
 
-    const result = mapToDaily([withExtraCondition]);
+    const result = mapToDaily([withExtraCondition], 0);
 
     expect(result[0].weather).toEqual({
       icon: "01d",
@@ -98,7 +98,7 @@ describe("mapToDaily", () => {
   });
 
   it("returns an empty array for empty entries", () => {
-    expect(mapToDaily([])).toEqual([]);
+    expect(mapToDaily([], 0)).toEqual([]);
   });
 
   it("caps result to 5 days by default", () => {
@@ -106,7 +106,7 @@ describe("mapToDaily", () => {
       entry(`2026-08-${20 + i}`, TEMP, FEELS_LIKE, "01d"),
     );
 
-    const result = mapToDaily(entries);
+    const result = mapToDaily(entries, 0);
 
     expect(result).toHaveLength(5);
   });
@@ -116,30 +116,21 @@ describe("mapToDaily", () => {
       entry(`2026-08-${20 + i}`, TEMP, FEELS_LIKE, "01d"),
     );
 
-    const result = mapToDaily(entries, 3);
+    const result = mapToDaily(entries, 0, 3);
 
     expect(result).toHaveLength(3);
   });
-});
-
-describe("mapToDaily timezone handling", () => {
-  const originalTZ = process.env.TZ;
-
-  afterEach(() => {
-    process.env.TZ = originalTZ;
-  });
-
-  it("labels weekday from the UTC calendar day, not the host runtime timezone", () => {
-    process.env.TZ = "America/Sao_Paulo";
-
+  it("labels weekday from the local calendar day, shifting dt by the API's timezone offset", () => {
     const entries = [
-      entry("2026-08-25T00:00:00Z", TEMP, FEELS_LIKE, "01d"),
-      entry("2026-08-26T00:00:00Z", TEMP, FEELS_LIKE, "01d"),
+      entry("2026-08-20T12:00:00Z", TEMP, FEELS_LIKE, "01d"),
+      // 2026-08-21T02:00:00Z is still 2026-08-20T22:00 local at UTC-4 (NY),
+      // so this must label "Thursday" (Aug 20), not "Friday" (Aug 21 UTC).
+      entry("2026-08-21T02:00:00Z", TEMP, FEELS_LIKE, "01d"),
     ];
 
-    const result = mapToDaily(entries);
+    const result = mapToDaily(entries, -14400);
 
-    expect(result[1].label).toBe("Wednesday");
+    expect(result[1].label).toBe("Thursday");
   });
 });
 
