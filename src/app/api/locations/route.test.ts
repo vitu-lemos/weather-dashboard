@@ -51,6 +51,9 @@ describe("GET /api/locations", () => {
     expect(await res.json()).toEqual({
       locations: [location],
     });
+    expect(res.headers.get("Cache-Control")).toBe(
+      "public, max-age=500, stale-while-revalidate=60",
+    );
   });
 
   it("sanitizes the city param before calling findLocations", async () => {

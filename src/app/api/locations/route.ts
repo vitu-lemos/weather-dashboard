@@ -24,5 +24,13 @@ export const GET = withErrorHandler(async (req: NextRequest) => {
   }
 
   const locations = await findLocations({ city, units });
-  return NextResponse.json({ locations }, { status: 200 });
+  return NextResponse.json(
+    { locations },
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=500, stale-while-revalidate=60",
+      },
+    },
+  );
 });
