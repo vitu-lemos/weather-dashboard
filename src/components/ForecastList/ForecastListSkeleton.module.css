@@ -1,0 +1,54 @@
+.card {
+  height: 100%;
+}
+
+.title {
+  width: 120px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.day {
+  flex: 1;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.rain {
+  flex-shrink: 0;
+  width: 40px;
+  height: 13px;
+  border-radius: 4px;
+}
+
+.temps {
+  flex-shrink: 0;
+  width: 70px;
+  height: 13px;
+  border-radius: 4px;
+}

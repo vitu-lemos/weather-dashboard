@@ -1,0 +1,89 @@
+.card {
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-direction: row;
+}
+
+.title {
+  width: 160px;
+  height: 20px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.line {
+  width: 100px;
+  height: 13px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+.icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main__content {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.temp {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+}
+
+.temp__value {
+  width: 120px;
+  height: 72px;
+  border-radius: 8px;
+}
+
+.temp__desc {
+  width: 140px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.temp__feels {
+  width: 110px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.metric {
+  width: 100%;
+  height: 16px;
+  border-radius: 4px;
+}
+
+@media (min-width: 640px) {
+  .icon {
+    width: 128px;
+    height: 128px;
+  }
+}

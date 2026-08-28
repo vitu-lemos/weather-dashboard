@@ -1,16 +1,17 @@
+import { Skeleton } from "@/components/ui/Skeleton/Skeleton";
 import styles from "./AppHeaderSkeleton.module.css";
 
 export function AppHeaderSkeleton() {
   return (
     <div className={styles.header} role="status" aria-label="Loading header">
       <div className={styles.top}>
-        <span className={`${styles.block} ${styles.title}`} />
+        <Skeleton className={styles.title} />
         <span className={styles.units}>
-          <span className={`${styles.block} ${styles.pill}`} />
-          <span className={`${styles.block} ${styles.pill}`} />
+          <Skeleton className={styles.pill} />
+          <Skeleton className={styles.pill} />
         </span>
       </div>
-      <span className={`${styles.block} ${styles.search}`} />
+      <Skeleton className={styles.search} />
     </div>
   );
 }
