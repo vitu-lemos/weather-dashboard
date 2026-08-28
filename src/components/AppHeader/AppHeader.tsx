@@ -8,6 +8,7 @@ import type { Units } from "@/types/weather";
 
 import { LocationSearch } from "@/components/LocationSearch/LocationSearch";
 import { UnitToggle } from "@/components/ui/UnitToggle/UnitToggle";
+import { DEFAULT_APP_UNIT } from "@/constants";
 
 import styles from "./AppHeader.module.css";
 
@@ -16,8 +17,11 @@ export function AppHeader() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const paramUnits = searchParams.get("units");
   const units: Units =
-    searchParams.get("units") === "metric" ? "metric" : "imperial";
+    paramUnits === "metric" || paramUnits === "imperial"
+      ? paramUnits
+      : DEFAULT_APP_UNIT.unit;
 
   const onChangeLocation = useCallback(
     (location: Location) => {
