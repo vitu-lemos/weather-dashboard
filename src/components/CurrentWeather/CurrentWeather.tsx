@@ -48,7 +48,7 @@ export function CurrentWeather({
   });
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader className={styles.header}>
         <div>
           <CardTitle>{location}</CardTitle>

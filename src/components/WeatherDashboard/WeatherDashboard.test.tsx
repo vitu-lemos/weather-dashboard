@@ -1,11 +1,16 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NotFoundError, BadGatewayError } from "@/lib/errors";
-import type { CurrentWeather, DailyForecast } from "@/types/weather";
+import type {
+  CurrentWeather,
+  DailyForecast,
+  HourlyForecast,
+} from "@/types/weather";
 
 const notFoundMock = vi.fn();
 const getCurrentWeatherByLocationIdMock = vi.fn();
 const getDailyForecastMock = vi.fn();
+const getHourlyForecastMock = vi.fn();
 
 vi.mock("next/navigation", () => ({
   notFound: () => notFoundMock(),
@@ -18,6 +23,7 @@ vi.mock("@/services/current-weather", () => ({
 
 vi.mock("@/services/forecast", () => ({
   getDailyForecast: (...args: unknown[]) => getDailyForecastMock(...args),
+  getHourlyForecast: (...args: unknown[]) => getHourlyForecastMock(...args),
 }));
 
 const { WeatherDashboard } = await import("./WeatherDashboard");
@@ -62,7 +68,22 @@ function buildForecast(): DailyForecast[] {
   ];
 }
 
+function buildHourly(): HourlyForecast[] {
+  return [
+    {
+      dt: 1_700_000_000,
+      weather: { id: 800, main: "Clear", description: "clear sky", icon: "01d" },
+      temp: 22,
+      pop: 0.2,
+    },
+  ];
+}
+
 describe("WeatherDashboard", () => {
+  beforeEach(() => {
+    getHourlyForecastMock.mockResolvedValue(buildHourly());
+  });
+
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
@@ -76,6 +97,7 @@ describe("WeatherDashboard", () => {
 
     expect(screen.getByText("New York, US")).toBeTruthy();
     expect(screen.getByText("5-Day Forecast")).toBeTruthy();
+    expect(screen.getByText("Hourly Forecast")).toBeTruthy();
   });
 
   it("calls notFound when the location does not exist", async () => {
@@ -108,5 +130,16 @@ describe("WeatherDashboard", () => {
 
     expect(screen.getByText("New York, US")).toBeTruthy();
     expect(screen.queryByText("5-Day Forecast")).toBeNull();
+  });
+
+  it("renders the current weather without an hourly section when the hourly fetch fails", async () => {
+    getCurrentWeatherByLocationIdMock.mockResolvedValue(buildCurrentWeather());
+    getDailyForecastMock.mockResolvedValue(buildForecast());
+    getHourlyForecastMock.mockRejectedValue(new Error("boom"));
+
+    render(await WeatherDashboard({ locationId: 5128581, units: "metric" }));
+
+    expect(screen.getByText("New York, US")).toBeTruthy();
+    expect(screen.queryByText("Hourly Forecast")).toBeNull();
   });
 });
