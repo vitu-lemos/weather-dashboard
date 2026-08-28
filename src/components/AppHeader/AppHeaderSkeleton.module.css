@@ -1,14 +1,14 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .title {
@@ -19,7 +19,7 @@
 
 .units {
   display: flex;
-  gap: 4px;
+  gap: var(--space-1);
   flex: 0 0 auto;
 }
 

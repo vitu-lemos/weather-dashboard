@@ -1,7 +1,7 @@
 .group {
   display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.18);
+  gap: var(--space-1);
+  background: var(--surface-2);
   border-radius: 8px;
   padding: 3px;
 }
@@ -9,10 +9,10 @@
 .button {
   border: 0;
   background: transparent;
-  color: #fff;
+  color: var(--text-primary);
   font: inherit;
-  font-size: 13px;
-  padding: 4px 10px;
+  font-size: 0.8125rem;
+  padding: var(--space-1) var(--space-2);
   border-radius: 6px;
   cursor: pointer;
 }

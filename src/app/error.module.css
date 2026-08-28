@@ -2,21 +2,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding: 24px 0;
+  gap: var(--space-4);
+  padding: var(--space-6) 0;
 }
 
 .retry {
-  padding: 10px 24px;
+  padding: var(--space-2) var(--space-6);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--surface-1);
+  color: var(--text-primary);
   font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
 }
 
 .retry:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--surface-2);
+}
+
+.retry:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }

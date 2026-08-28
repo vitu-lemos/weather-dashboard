@@ -1,6 +1,6 @@
 .skeleton {
   display: block;
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--surface-2);
   border-radius: 6px;
   animation: pulse 1.5s ease-in-out infinite;
 }

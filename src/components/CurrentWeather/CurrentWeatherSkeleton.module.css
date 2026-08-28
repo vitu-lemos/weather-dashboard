@@ -32,20 +32,20 @@
 .main {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-5);
 }
 
 .main__content {
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  gap: var(--space-3);
   justify-content: space-between;
   align-items: center;
 }
 
 .temp {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   flex-direction: column;
 }
 
@@ -70,9 +70,9 @@
 .metrics {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  gap: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--surface-border);
 }
 
 .metric {

@@ -1,40 +1,42 @@
 .card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  gap: var(--space-3);
+  background: var(--surface-1);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: var(--space-3);
 }
 
 .day {
   flex: 1;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
+  color: var(--text-primary);
 }
 
 .rain {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  opacity: 0.85;
+  gap: var(--space-1);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
 }
 
 .temps {
   display: flex;
   flex-shrink: 0;
-  gap: 10px;
-  font-size: 13px;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
   align-items: baseline;
   white-space: nowrap;
 }
 
 .low {
-  opacity: 0.85;
+  color: var(--text-secondary);
 }
 
 .high {
   font-weight: 700;
+  color: var(--text-primary);
 }
