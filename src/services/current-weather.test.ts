@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { owmClient } from "./owm-client";
-import { getCurrentWeatherByLocationId } from "./current-weather";
+import { getCurrentWeatherByCoord } from "./current-weather";
 import type { CurrentWeather } from "@/types/weather";
 import { BadGatewayError } from "@/lib/errors";
 
@@ -51,26 +51,35 @@ const mockWeather: CurrentWeather = {
   cod: 200,
 };
 
-describe("getCurrentWeatherByLocationId", () => {
-  it("calls the weather endpoint by id, with units and a 5-minute cache", async () => {
+describe("getCurrentWeatherByCoord", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("calls the weather endpoint by coord, with units and a 500-second cache", async () => {
     const requestSpy = vi
       .spyOn(owmClient, "request")
       .mockResolvedValue(mockWeather);
 
-    await getCurrentWeatherByLocationId({ id: 5128581, units: "metric" });
+    await getCurrentWeatherByCoord({
+      lat: 40.7143,
+      lon: -74.006,
+      units: "metric",
+    });
 
     expect(requestSpy).toHaveBeenCalledWith(
       "/data/2.5/weather",
-      { id: "5128581", units: "metric" },
-      { revalidateSeconds: 300 },
+      { lat: "40.7143", lon: "-74.006", units: "metric" },
+      { revalidateSeconds: 500 },
     );
   });
 
   it("returns the client's response as-is", async () => {
     vi.spyOn(owmClient, "request").mockResolvedValue(mockWeather);
 
-    const result = await getCurrentWeatherByLocationId({
-      id: 1,
+    const result = await getCurrentWeatherByCoord({
+      lat: 1,
+      lon: 1,
       units: "imperial",
     });
 
@@ -85,7 +94,7 @@ describe("getCurrentWeatherByLocationId", () => {
     );
 
     await expect(
-      getCurrentWeatherByLocationId({ id: 9999999, units: "imperial" }),
+      getCurrentWeatherByCoord({ lat: 99, lon: 99, units: "imperial" }),
     ).rejects.toMatchObject({ name: "NotFoundError", statusCode: 404 });
   });
 });
