@@ -25,5 +25,11 @@
 }
 
 .content {
-  padding: var(--space-5);
+  padding: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .content {
+    padding: var(--space-5);
+  }
 }
