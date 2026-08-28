@@ -1,0 +1,28 @@
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 24px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.15);
+  color: #fff;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  color: #f87171;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.message {
+  font-size: 0.875rem;
+  opacity: 0.85;
+}

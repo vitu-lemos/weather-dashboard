@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { CurrentWeather } from "@/components/CurrentWeather/CurrentWeather";
 import { ForecastList } from "@/components/ForecastList/ForecastList";
 import { HourlyForecastList } from "@/components/HourlyForecastList/HourlyForecastList";
+import { ErrorBanner } from "@/components/ui/ErrorBanner/ErrorBanner";
 import { safeLoad } from "@/lib/errors/server-request-with-error-handler";
 import { getCurrentWeatherByCoord } from "@/services/current-weather";
 import { getDailyForecast, getHourlyForecast } from "@/services/forecast";
@@ -29,9 +30,11 @@ export async function WeatherDashboard({
 
   if (!cityResult.success) {
     return (
-      <div>
-        <h1>Failed to load city weather</h1>
-        <p>{cityResult.message}</p>
+      <div className={styles.page}>
+        <ErrorBanner
+          title="Failed to load city weather"
+          message={cityResult.message}
+        />
       </div>
     );
   }
@@ -61,20 +64,30 @@ export async function WeatherDashboard({
             precipitationChance={todayPrecipitationChance}
           />
         </div>
-        {forecastResult.success && (
-          <div className={styles.sidebar}>
+        <div className={styles.sidebar}>
+          {forecastResult.success ? (
             <ForecastList
               forecast={forecastResult.data}
               title="5-Day Forecast"
             />
-          </div>
-        )}
+          ) : (
+            <ErrorBanner
+              title="Failed to load forecast"
+              message={forecastResult.message}
+            />
+          )}
+        </div>
       </div>
-      {hourlyResult.success && (
+      {hourlyResult.success ? (
         <HourlyForecastList
           hourly={hourlyResult.data}
           timezone={current.timezone}
           title="Hourly Forecast"
+        />
+      ) : (
+        <ErrorBanner
+          title="Failed to load hourly forecast"
+          message={hourlyResult.message}
         />
       )}
     </div>
