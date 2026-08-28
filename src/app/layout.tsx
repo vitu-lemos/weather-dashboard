@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { AppShell } from "@/components/AppShell/AppShell";
 import { AppHeader } from "@/components/AppHeader/AppHeader";
+import { Disclaimer } from "@/components/Disclaimer/Disclaimer";
 
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -23,7 +24,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <AppShell>
           <AppHeader />
-          {children}
+          <main>{children}</main>
+          <footer>
+            <Disclaimer />
+          </footer>
         </AppShell>
       </body>
     </html>

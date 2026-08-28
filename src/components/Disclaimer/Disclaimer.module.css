@@ -1,0 +1,13 @@
+.disclaimer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.disclaimer p {
+  margin: 0;
+}
