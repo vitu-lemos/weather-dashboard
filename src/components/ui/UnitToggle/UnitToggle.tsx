@@ -3,7 +3,7 @@
 import styles from "./UnitToggle.module.css";
 import type { Units } from "@/types/weather";
 import { APP_UNITS } from "@/constants";
-import { useState } from "react";
+import { startTransition, useOptimistic } from "react";
 
 interface UnitToggleProps {
   units: Units;
@@ -11,7 +11,7 @@ interface UnitToggleProps {
 }
 
 export function UnitToggle({ units, onChange }: UnitToggleProps) {
-  const [value, setValue] = useState(units);
+  const [optimisticUnits, setOptimisticUnits] = useOptimistic(units);
 
   return (
     <div className={styles.group} role="group" aria-label="Temperature units">
@@ -20,11 +20,13 @@ export function UnitToggle({ units, onChange }: UnitToggleProps) {
           key={option.unit}
           type="button"
           aria-label={`Switch to ${option.unit} units`}
-          data-state={value === option.unit ? "on" : "off"}
+          data-state={optimisticUnits === option.unit ? "on" : "off"}
           className={`${styles.button} `}
           onClick={() => {
-            setValue(option.unit);
-            onChange(option.unit);
+            startTransition(() => {
+              setOptimisticUnits(option.unit);
+              onChange(option.unit);
+            });
           }}
         >
           {option.symbol}
