@@ -3,8 +3,11 @@ import "server-only";
 import { owmClient } from "./owm-client";
 import type {
   DailyForecast,
+  HourlyForecast,
   OwmDailyForecastEntry,
   OwmForecastResponse,
+  OwmHourlyForecastEntry,
+  OwmHourlyForecastResponse,
   Units,
 } from "@/types/weather";
 import type { LocationCoordination } from "@/types/location";
@@ -12,6 +15,14 @@ import type { LocationCoordination } from "@/types/location";
 interface GetForecastParams {
   coord: LocationCoordination;
   units: Units;
+  limit?: number;
+}
+
+interface GetHourlyForecastParams {
+  coord: LocationCoordination;
+  units: Units;
+  /** YYYY-MM-DD */
+  date: string;
   limit?: number;
 }
 
@@ -64,4 +75,37 @@ export const getDailyForecast = async ({
   );
 
   return mapToDaily(data.data, limit);
+};
+
+export function mapToHourly(
+  entries: OwmHourlyForecastEntry[],
+  limit = 24,
+): HourlyForecast[] {
+  return entries.slice(0, limit).map((entry) => ({
+    dt: entry.dt,
+    weather: entry.weather[0],
+    temp: entry.temp,
+    pop: entry.pop,
+  }));
+}
+
+export const getHourlyForecast = async ({
+  coord,
+  units,
+  date,
+  limit = 24,
+}: GetHourlyForecastParams): Promise<HourlyForecast[]> => {
+  const data = await owmClient.request<OwmHourlyForecastResponse>(
+    "/data/4.0/onecall/timeline/1h",
+    {
+      lat: coord.lat.toString(),
+      lon: coord.lon.toString(),
+      date,
+      cnt: limit.toString(),
+      units,
+    },
+    { revalidateSeconds: 300 },
+  );
+
+  return mapToHourly(data.data, limit);
 };

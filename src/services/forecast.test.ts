@@ -1,7 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { owmClient } from "./owm-client";
-import { getDailyForecast, mapToDaily } from "./forecast";
-import type { OwmDailyForecastEntry } from "@/types/weather";
+import {
+  getDailyForecast,
+  mapToDaily,
+  getHourlyForecast,
+  mapToHourly,
+} from "./forecast";
+import type {
+  OwmDailyForecastEntry,
+  OwmHourlyForecastEntry,
+} from "@/types/weather";
 
 function entry(
   isoDateUTC: string,
@@ -182,6 +190,158 @@ describe("getDailyForecast", () => {
     expect(requestSpy).toHaveBeenCalledWith(
       "/data/4.0/onecall/timeline/1day",
       { lat: "40.7127", lon: "-74.0103", cnt: "3", units: "metric" },
+      { revalidateSeconds: 300 },
+    );
+
+    expect(result).toHaveLength(3);
+  });
+});
+
+function hourlyEntry(
+  isoDateUTC: string,
+  temp: number,
+  icon: string,
+  pop = 0.4,
+): OwmHourlyForecastEntry {
+  return {
+    dt: Math.floor(new Date(isoDateUTC).getTime() / 1000),
+    temp,
+    pop,
+    weather: [{ icon, description: "clear sky", main: "Clear", id: 800 }],
+  };
+}
+
+describe("mapToHourly", () => {
+  it("maps OWM hourly response to HourlyForecast format", () => {
+    const entries = [hourlyEntry("2026-08-20T13:00:00Z", 63.4, "01d", 0.4)];
+
+    const result = mapToHourly(entries);
+
+    expect(result).toEqual([
+      {
+        dt: Math.floor(new Date("2026-08-20T13:00:00Z").getTime() / 1000),
+        weather: {
+          icon: "01d",
+          description: "clear sky",
+          main: "Clear",
+          id: 800,
+        },
+        temp: 63.4,
+        pop: 0.4,
+      },
+    ]);
+  });
+
+  it("uses only the first weather condition when the API returns more than one", () => {
+    const withExtraCondition: OwmHourlyForecastEntry = {
+      ...hourlyEntry("2026-08-20T13:00:00Z", 63.4, "01d"),
+      weather: [
+        { icon: "01d", description: "clear sky", main: "Clear", id: 800 },
+        { icon: "50d", description: "mist", main: "Mist", id: 701 },
+      ],
+    };
+
+    const result = mapToHourly([withExtraCondition]);
+
+    expect(result[0].weather).toEqual({
+      icon: "01d",
+      description: "clear sky",
+      main: "Clear",
+      id: 800,
+    });
+  });
+
+  it("returns an empty array for empty entries", () => {
+    expect(mapToHourly([])).toEqual([]);
+  });
+
+  it("caps result to 24 hours by default", () => {
+    const entries = Array.from({ length: 30 }, (_, i) =>
+      hourlyEntry(
+        `2026-08-20T${String(i % 24).padStart(2, "0")}:00:00Z`,
+        60,
+        "01d",
+      ),
+    );
+
+    const result = mapToHourly(entries);
+
+    expect(result).toHaveLength(24);
+  });
+
+  it("respects a custom limit", () => {
+    const entries = Array.from({ length: 10 }, (_, i) =>
+      hourlyEntry(`2026-08-20T${String(i).padStart(2, "0")}:00:00Z`, 60, "01d"),
+    );
+
+    const result = mapToHourly(entries, 5);
+
+    expect(result).toHaveLength(5);
+  });
+});
+
+describe("getHourlyForecast", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("calls the onecall hourly timeline endpoint with lat/lon/date/cnt, returning the mapped result", async () => {
+    const requestSpy = vi.spyOn(owmClient, "request").mockResolvedValue({
+      lat: 40.7127,
+      lon: -74.0103,
+      timezone: "America/New_York",
+      timezone_offset: -14400,
+      data: [hourlyEntry("2026-08-20T13:00:00Z", 63.4, "01d")],
+    });
+
+    const result = await getHourlyForecast({
+      coord: { lat: 40.7127, lon: -74.0103 },
+      units: "metric",
+      date: "2026-08-20",
+    });
+
+    expect(requestSpy).toHaveBeenCalledWith(
+      "/data/4.0/onecall/timeline/1h",
+      {
+        lat: "40.7127",
+        lon: "-74.0103",
+        date: "2026-08-20",
+        cnt: "24",
+        units: "metric",
+      },
+      { revalidateSeconds: 300 },
+    );
+    expect(result).toHaveLength(1);
+    expect(result[0].temp).toBe(63.4);
+  });
+
+  it("forwards a custom limit to both the request cnt and the mapped result length", async () => {
+    const requestSpy = vi.spyOn(owmClient, "request").mockResolvedValue({
+      lat: 40.7127,
+      lon: -74.0103,
+      timezone: "America/New_York",
+      timezone_offset: -14400,
+      data: Array.from({ length: 5 }, (_, i) =>
+        hourlyEntry(`2026-08-20T0${i}:00:00Z`, 60, "01d"),
+      ),
+    });
+
+    const result = await getHourlyForecast({
+      coord: { lat: 40.7127, lon: -74.0103 },
+      units: "metric",
+      date: "2026-08-20",
+      limit: 3,
+    });
+
+    expect(requestSpy).toHaveBeenCalledWith(
+      "/data/4.0/onecall/timeline/1h",
+      {
+        lat: "40.7127",
+        lon: "-74.0103",
+        date: "2026-08-20",
+        cnt: "3",
+        units: "metric",
+      },
       { revalidateSeconds: 300 },
     );
 

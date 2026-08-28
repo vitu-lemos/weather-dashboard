@@ -107,3 +107,25 @@ export interface OwmForecastResponse {
   timezone_offset: number;
   data: OwmDailyForecastEntry[];
 }
+
+export interface HourlyForecast {
+  dt: number;
+  weather: WeatherCondition;
+  temp: number;
+  /** Probability of precipitation, 0-1 */
+  pop: number;
+}
+
+export interface OwmHourlyForecastEntry {
+  dt: number;
+  temp: number;
+  /** Probability of precipitation, 0-1 */
+  pop: number;
+  weather: WeatherCondition[];
+}
+
+export interface OwmHourlyForecastResponse extends LocationCoordination {
+  timezone: string;
+  timezone_offset: number;
+  data: OwmHourlyForecastEntry[];
+}
