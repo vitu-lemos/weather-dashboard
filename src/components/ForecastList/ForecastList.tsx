@@ -17,7 +17,9 @@ export function ForecastList({ forecast, title }: ForecastListProps) {
   return (
     <Card className={styles.card}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <h2 className={styles.title}>{title}</h2>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ul aria-label={title} className={styles.list}>

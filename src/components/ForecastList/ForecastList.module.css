@@ -2,6 +2,12 @@
   height: 100%;
 }
 
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
 .list {
   list-style: none;
   display: flex;
