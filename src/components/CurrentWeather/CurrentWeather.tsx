@@ -27,7 +27,7 @@ const WIND_SPEED_UNIT: Record<Units, string> = {
 
 export function CurrentWeather({
   current,
-  units = DEFAULT_APP_UNIT,
+  units = DEFAULT_APP_UNIT.unit,
   precipitationChance = 0,
 }: CurrentWeatherProps) {
   const [condition] = current.weather;
