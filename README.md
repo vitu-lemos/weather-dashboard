@@ -26,6 +26,16 @@ App wrappers turn a thrown `CustomError` into a safe result
 
 `src/services/forecast.ts` calls OpenWeatherMap's One Call API 4.0 `timeline/1day` and `timeline/1h` endpoints. These endpoints return data already grouped per day and per hour, so the app does not group entries or pick a representative time block itself. See "OpenWeatherMap API Requirements" below for the subscription this endpoint needs.
 
+### Location detection
+
+Map coordinates for the dashboard follow this order:
+
+1. **`lat` and `lon` query parameters.** An explicit URL always wins.
+2. **The visitor's IP location.** The app reads this from Vercel's geolocation headers, through the `geolocation()` helper in the `@vercel/functions` package. This only works on a Vercel deployment. Local dev and other hosts skip this step.
+3. **New York.** The app uses this as the default when steps 1 and 2 give no coordinates.
+
+The `units` query parameter follows a separate default. See `DEFAULT_APP_UNIT` in `src/constants.ts`.
+
 ## Main Stack
 
 - **Next.js 16** (App Router) — React framework, server components, and API routes
