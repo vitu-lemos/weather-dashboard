@@ -17,7 +17,7 @@ interface LocationSearchProps {
 }
 
 function getOptionLabel(location: Location): string {
-  return `${location.name}, ${location.country}`;
+  return `${location.name}, ${location.state ? `${location.state}, ` : ""}${location.country}`;
 }
 
 export function LocationSearch({
