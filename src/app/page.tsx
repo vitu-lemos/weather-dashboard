@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { geolocation } from "@vercel/functions";
+import { headers } from "next/headers";
+
 import { WeatherDashboard } from "@/components/WeatherDashboard/WeatherDashboard";
-import { DEFAULT_APP_UNIT } from "@/constants";
+import { DEFAULT_APP_UNIT, DEFAULT_LOCATION_COORD } from "@/constants";
 import { safeLoad } from "@/lib/errors/server-request-with-error-handler";
 import { getCurrentWeatherByCoord } from "@/services/current-weather";
 import type { Units } from "@/types/weather";
 
-const DEFAULT_COORD = { lat: 40.7127281, lon: -74.0060152 }; // New York
-
-function parseCoord(value: string | string[] | undefined): number | null {
+function parseCoord(
+  value: string | string[] | undefined | null,
+): number | null {
   const parsed = Number(Array.isArray(value) ? value[0] : value);
   return Number.isFinite(parsed) ? parsed : null;
 }
@@ -23,8 +26,16 @@ async function resolveParams(searchParams: PageProps<"/">["searchParams"]) {
       ? query.units
       : DEFAULT_APP_UNIT.unit;
 
-  const lat = parseCoord(query.lat) ?? DEFAULT_COORD.lat;
-  const lon = parseCoord(query.lon) ?? DEFAULT_COORD.lon;
+  const geo = geolocation({ headers: await headers() });
+
+  const lat =
+    parseCoord(query.lat) ??
+    parseCoord(geo.latitude) ??
+    DEFAULT_LOCATION_COORD.lat;
+  const lon =
+    parseCoord(query.lon) ??
+    parseCoord(geo.longitude) ??
+    DEFAULT_LOCATION_COORD.lon;
 
   return { lat, lon, units };
 }
