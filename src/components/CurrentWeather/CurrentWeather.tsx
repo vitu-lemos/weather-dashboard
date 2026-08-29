@@ -52,7 +52,9 @@ export function CurrentWeather({
     <Card className={styles.card}>
       <CardHeader className={styles.header}>
         <div>
-          <CardTitle>{location}</CardTitle>
+          <CardTitle>
+            <h1 className={styles.header__title}>{location}</h1>
+          </CardTitle>
           <p className={styles.header__date}>{date}</p>
           <p className={styles.header__date}>{time}</p>
         </div>
