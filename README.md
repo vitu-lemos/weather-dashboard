@@ -1,4 +1,4 @@
-# Weather Service
+# Weather dashboard
 
 Weather Service web app that shows the weather for a city using OpenWeatherMap API. A user searches for a city and sees the current weather and a 5-day forecast.
 
