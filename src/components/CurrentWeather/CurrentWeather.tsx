@@ -12,6 +12,7 @@ import type {
 
 import styles from "./CurrentWeather.module.css";
 import { CloudRain, Droplets, Gauge, Wind } from "lucide-react";
+import { DEFAULT_APP_UNIT } from "@/constants";
 
 interface CurrentWeatherProps {
   current: CurrentWeatherData;
@@ -26,7 +27,7 @@ const WIND_SPEED_UNIT: Record<Units, string> = {
 
 export function CurrentWeather({
   current,
-  units = "imperial",
+  units = DEFAULT_APP_UNIT.unit,
   precipitationChance = 0,
 }: CurrentWeatherProps) {
   const [condition] = current.weather;
