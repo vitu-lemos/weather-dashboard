@@ -13,8 +13,8 @@ import "../../public/css/weather-icons.min.css";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-inter",
 });
-
 export const metadata: Metadata = {
   title: "Weather Service",
   description: "Vitor Lemos - dev pro test",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.className}`}>
+    <html lang="en" className={`${inter.variable} ${inter.className}`}>
       <body>
         <AppShell>
           <Suspense fallback={<AppHeaderSkeleton />}>
