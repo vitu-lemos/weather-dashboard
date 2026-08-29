@@ -23,7 +23,7 @@ export function ForecastList({ forecast, title }: ForecastListProps) {
         <ul aria-label={title} className={styles.list}>
           {forecast.map((day) => (
             <li
-              key={day.label}
+              key={day.dt}
               aria-label={`Forecast for ${day.label}`}
               className={styles.list__item}
             >
