@@ -25,7 +25,7 @@ export function HourlyForecastList({
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ul aria-label={title} className={styles.list}>
+        <ul aria-label={title} className={styles.list} tabIndex={0}>
           {hourly.map((hour) => (
             <li key={hour.dt} className={styles.list__item}>
               <HourlyForecastCard hour={hour} timezone={timezone} />
