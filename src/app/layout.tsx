@@ -5,6 +5,7 @@ import { AppShell } from "@/components/AppShell/AppShell";
 import { AppHeader } from "@/components/AppHeader/AppHeader";
 import { AppHeaderSkeleton } from "@/components/AppHeader/AppHeaderSkeleton";
 import { Disclaimer } from "@/components/Disclaimer/Disclaimer";
+import { Analytics } from "@vercel/analytics/next";
 
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Disclaimer />
           </footer>
         </AppShell>
+        <Analytics />
       </body>
     </html>
   );
