@@ -4,6 +4,7 @@ import styles from "./UnitToggle.module.css";
 import type { Units } from "@/types/weather";
 import { APP_UNITS } from "@/constants";
 import { startTransition, useOptimistic, useState } from "react";
+import posthog from "posthog-js";
 
 interface UnitToggleProps {
   units: Units;
@@ -25,6 +26,11 @@ export function UnitToggle({ units, onChange }: UnitToggleProps) {
           data-state={optimisticUnits === option.unit ? "on" : "off"}
           className={`${styles.button} `}
           onClick={() => {
+            if (option.unit === units) return;
+
+            posthog.capture("temperature_unit_changed", {
+              to_unit: option.unit,
+            });
             setAnnouncement(`Units switched to ${option.unit}`);
             startTransition(() => {
               setOptimisticUnits(option.unit);

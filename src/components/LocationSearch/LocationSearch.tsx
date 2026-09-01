@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import posthog from "posthog-js";
 import ReactCountryFlag from "react-country-flag";
 import { WeatherIcon } from "@/components/ui/WeatherIcon/WeatherIcon";
 import { SearchBar } from "@/components/ui/SearchBar/SearchBar";
@@ -55,10 +56,11 @@ export function LocationSearch({
 
   const handleSelect = useCallback(
     (location: Location) => {
+      posthog.capture("location_selected", { units: unit });
       setValue(null);
       onSelect(location);
     },
-    [onSelect],
+    [onSelect, unit],
   );
 
   const renderOption = useCallback((location: Location) => {
