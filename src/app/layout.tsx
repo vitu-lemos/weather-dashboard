@@ -9,6 +9,7 @@ import { Disclaimer } from "@/components/Disclaimer/Disclaimer";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "../../public/css/weather-icons.min.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Disclaimer />
           </footer>
         </AppShell>
+        <Analytics />
       </body>
     </html>
   );
